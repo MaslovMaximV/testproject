@@ -1,6 +1,5 @@
-package com.example.testproject.res;
+package com.example.testproject;
 
-import com.example.testproject.filter.ShopFilter;
 import com.example.testproject.dto.ShopDto;
 import com.example.testproject.entity.Shop;
 import com.example.testproject.map.ShopMapper;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +37,8 @@ public class ShopResource {
     }
 
     @GetMapping
-    public PagedModel<ShopDto> getList(@ModelAttribute ShopFilter filter, Pageable pageable) {
-        Specification<Shop> spec = filter.toSpecification();
-        Page<Shop> shops = shopRepository.findAll(spec, pageable);
+    public PagedModel<ShopDto> getAll(Pageable pageable) {
+        Page<Shop> shops = shopRepository.findAll(pageable);
         Page<ShopDto> shopDtoPage = shops.map(shopMapper::toDto);
         return new PagedModel<>(shopDtoPage);
     }
